@@ -17,6 +17,7 @@ defmodule PhxChatWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/some_chat", SomeChatController, :index
   end
 
   # Other scopes may use custom stacks.
