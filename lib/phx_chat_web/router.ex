@@ -19,6 +19,7 @@ defmodule PhxChatWeb.Router do
 
     get "/", PageController, :index
     get "/some_chat", SomeChatController, :index
+    get "/some_foo", SomeChatController, :foo
     resources "/users", UserController, only: [:index]
   end
 

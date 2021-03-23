@@ -2,7 +2,7 @@ defmodule PhxChatWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", PhxChatWeb.RoomChannel
+  channel "room:*", PhxChatWeb.RoomChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
