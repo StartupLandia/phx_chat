@@ -20,7 +20,8 @@ defmodule PhxChatWeb.Router do
     get "/", PageController, :index
     get "/some_chat", SomeChatController, :index
     get "/some_foo", SomeChatController, :foo
-    resources "/users", UserController, only: [:index]
+    # resources "/users", UserController, only: [:index]
+    resources "/chat_channels", ChatChannelsController, only: [:show]
   end
 
   # Other scopes may use custom stacks.

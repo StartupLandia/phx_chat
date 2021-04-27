@@ -1,0 +1,26 @@
+<section class="phx-hero">
+  Channel #<%= @channel.id %> '<%= @channel.name %>' 
+</section>
+
+<section>
+  <div id="messages" role="log" aria-live="polite">
+    <%= Enum.map @channel.messages, fn(message) -> %>
+      <div><%= message.inserted_at %> <%= message.body %> by <%= message.user.name %></div>
+    <% end %>
+  </div>
+</section>
+
+<section class="row">
+  <article class="column">
+    
+    <label>Send Message As</label>
+    <select id="userId">
+      <%= Enum.map @users, fn(user) -> %>
+        <option value="<%= user.id %>"><%= user.name %></option>
+      <% end %>
+    </select>
+    <input type="text" id="chat-input" label="chathere" />
+    <input type="submit" id="chatSubmit" label="submit" value="send it" />
+  </article>
+</section>
+<a href="/">all channels</a>

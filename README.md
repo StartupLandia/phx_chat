@@ -7,7 +7,7 @@
   - [`localhost:4000`](http://localhost:4000) from browser.
   - Run a console and server in same process `iex -S mix phx.server`
   - Run just a console `iex -S mix`
-  - reload coad into console `recompile()` 
+  - reload code into console `recompile()` 
 
 
 ### Ecto
@@ -22,6 +22,7 @@ Basic ORM behaviors...
   - more on ecto, https://hexdocs.pm/ecto/Ecto.html
   - it is something lix a hybrid of rails + django, more raw that active record (thats a good thing for learning sql)
   - to reset/clear a db, `mix ecto.reset`
+  - `PhxChat.Repo.get PhxChat.ChatChannel, 1` to query for id 1 of X Class
 
 
 ### Gen Ideas
@@ -86,3 +87,8 @@ mix phx.new.ecto       # Creates a new Ecto project within an umbrella project
   - Docs: https://hexdocs.pm/phoenix
   - Forum: https://elixirforum.com/c/phoenix-forum
   - Source: https://github.com/phoenixframework/phoenix
+
+
+### Quirks
+
+- if an object belongs to another object, you can't use that other object's id directly, ie messages belongs_to User cant directly use user_id in the schema?
