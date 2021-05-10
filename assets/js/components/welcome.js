@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import {Socket} from "phoenix"
+import MessageElement from "./message_element"
 
 function Example() {
   const [count, setCount] = useState(0);
@@ -20,22 +21,28 @@ export default class Welcome extends React.Component {
 
   constructor (props) {
     super(props)
+    const searchQuery = new URLSearchParams(window.location.search)
     let socket = new Socket("/socket", {params: {token: window.userToken}})
     socket.connect()
     let channelId = window.location.pathname.split("").pop()
     let channelName = "room:" + channelId 
+    let messageElements = props.messages.map( (ele, i) => {
+        return( <MessageElement key={i} message={ele} /> )
+      }
+    )
+
     this.state = { 
       chatSocket: socket,
       channelId: channelId,
       channelName: channelName,
       channel: socket.channel(channelName, {}),
       chatMessage: '',
-      userId: 1,
-      recentMessages: []
+      currentUserId: searchQuery.get('view_as_user_id') || 1,
+      recentMessages: [],
+      messageElements: messageElements
     }
 
     this.state.channel.on("new_msg", payload => {
-      console.log('payload', payload)
       messages = this.state.recentMessages
       messages.push(payload)
       this.setState({recentMessages: messages})
@@ -51,10 +58,10 @@ export default class Welcome extends React.Component {
   }
 
   sendChat = (e) => {
-    console.log(this.state.chatMessage, this.state.userId)
+    console.log(this.state.chatMessage, this.state.currentUserId)
     const msgObj = { 
       body: this.state.chatMessage,
-      userId: Number(this.state.userId),
+      userId: Number(this.state.currentUserId),
       chatChannelId: Number(this.state.channelId)
     }
 
@@ -75,7 +82,7 @@ export default class Welcome extends React.Component {
   }
 
   updateUser = (e) => {
-    this.setState({userId: e.target.value})
+    this.setState({currentUserId: e.target.value})
   }
 
   render() {
@@ -89,9 +96,16 @@ export default class Welcome extends React.Component {
     })
     return (
       <div>
-        {messages}
+        <h3>current user id: {this.state.currentUserId} </h3>
+
+        <section>
+          <div id="messages" role="log" aria-live="polite" className='messages'>
+            {this.state.messageElements}
+          </div>
+        </section>
+
         <label> Send Message As</label>
-        <select id="userId" onChange={this.updateUser} value={this.state.userId}>
+        <select id="currentUserId" onChange={this.updateUser} value={this.state.currentUserId}>
           {usersAsOpts}
         </select>
         <input type="text" label="chathere" value={this.state.chatMessage} onChange={this.updateMessage} />

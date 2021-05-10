@@ -2,15 +2,7 @@
   Channel #<%= @channel.id %> '<%= @channel.name %>' 
 </section>
 
-<section>
-  <div id="messages" role="log" aria-live="polite">
-    <%= Enum.map @channel.messages, fn(message) -> %>
-      <div><%= message.inserted_at %> <%= message.body %> by <%= message.user.name %></div>
-    <% end %>
-  </div>
-</section>
-
-<%= react_component("Components.Welcome", %{users: Enum.map(PhxChat.Repo.all(PhxChat.User), fn x -> [x.name, x.id] end)}) %>
+<%= react_component("Components.Welcome", %{users: @users, messages: @messages}) %>
 
 <section class="row">
   <article class="column">

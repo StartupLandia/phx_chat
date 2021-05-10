@@ -6,6 +6,7 @@ defmodule PhxChat.ChatChannel do
     field :name, :string
 
     has_many :messages, PhxChat.Message
+    belongs_to :user, PhxChat.User
 
     timestamps()
   end

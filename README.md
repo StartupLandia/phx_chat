@@ -87,6 +87,7 @@ mix phx.new.ecto       # Creates a new Ecto project within an umbrella project
   - Docs: https://hexdocs.pm/phoenix
   - Forum: https://elixirforum.com/c/phoenix-forum
   - Source: https://github.com/phoenixframework/phoenix
+  - https://devhints.io/phoenix-migrations
 
 
 ### Quirks

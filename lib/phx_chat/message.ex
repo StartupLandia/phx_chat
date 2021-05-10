@@ -13,6 +13,15 @@ defmodule PhxChat.Message do
     timestamps()
   end
 
+  def create_en_masse(user_id) do
+    channel_id = PhxChat.Repo.get_by(PhxChat.ChatChannel, user_id: user_id).id
+    Enum.map(Enum.to_list(1..1000), fn y ->
+      message = "I've just placed puzzle piece #{y}"
+      changeset = PhxChat.Message.changeset(%PhxChat.Message{}, %{user_id: user_id, body: message, chat_channel_id: channel_id})
+      PhxChat.Repo.insert(changeset)
+    end)
+  end
+
   @doc false
   def changeset(%Message{} = message, attrs) do
     message
