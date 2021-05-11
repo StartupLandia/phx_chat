@@ -17,7 +17,9 @@ import "phoenix_html"
 import "react-phoenix"
 
 import Welcome from "./components/welcome"
+import Proto from "./components/proto"
 
 window.Components = {
-  Welcome
+  Welcome,
+  Proto
 }

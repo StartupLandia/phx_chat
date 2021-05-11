@@ -3,19 +3,31 @@ import React, { useState, useEffect } from 'react';
 import {Socket} from "phoenix"
 import MessageElement from "./message_element"
 
-function Example() {
-  const [count, setCount] = useState(0);
+import useIntersect from "./useIntersect";
 
-  // Similar to componentDidMount and componentDidUpdate:  useEffect(() => {    // Update the document title using the browser API    document.title = `You clicked ${count} times`;  });
+const TrackedViewable = (props) => {
+  const [ref, entry] = useIntersect({
+    threshold: [.5],
+    intersectCall: props.intersectCallback
+  });
+
   return (
-    <div>
-      <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>
-        Click me
-      </button>
+    <div ref={ref} ratio={entry.intersectionRatio} data-message-id={props.message.id}  >
+      <span>{props.message.inserted_at} - {props.message.body} by {props.message.inserted_by} </span>
+    </div>
+  );
+};
+
+const Proto = (props) => {
+  return (
+    <div >
+      {props.messages.map((message, i) => (
+        <TrackedViewable message={message} initial={i % 2} key={i} intersectCallback={props.intersectCallback} />
+      ))}
     </div>
   );
 }
+
 
 export default class Welcome extends React.Component {
 
@@ -26,10 +38,6 @@ export default class Welcome extends React.Component {
     socket.connect()
     let channelId = window.location.pathname.split("").pop()
     let channelName = "room:" + channelId 
-    let messageElements = props.messages.map( (ele, i) => {
-        return( <MessageElement key={i} message={ele} /> )
-      }
-    )
 
     this.state = { 
       chatSocket: socket,
@@ -39,7 +47,6 @@ export default class Welcome extends React.Component {
       chatMessage: '',
       currentUserId: searchQuery.get('view_as_user_id') || 1,
       recentMessages: [],
-      messageElements: messageElements
     }
 
     this.state.channel.on("new_msg", payload => {
@@ -51,10 +58,6 @@ export default class Welcome extends React.Component {
     this.state.channel.join()
       .receive("ok", resp => { console.log("Joined successfully", resp) })
       .receive("error", resp => { console.log("Unable to join", resp) })
-  }
-
-  foo = (props) => {
-    console.log(this.state)
   }
 
   sendChat = (e) => {
@@ -85,6 +88,14 @@ export default class Welcome extends React.Component {
     this.setState({currentUserId: e.target.value})
   }
 
+  trackIntercept = (observableEntry) => {
+    setTimeout(function () {
+      if (observableEntry.intersectionRatio >= .5) {
+        console.log(observableEntry.target.dataset) 
+      }
+    }, 2000);
+  }
+
   render() {
     const usersAsOpts = this.asOptions()
     const messages = this.state.recentMessages.map( (ele,i) => {
@@ -100,7 +111,8 @@ export default class Welcome extends React.Component {
 
         <section>
           <div id="messages" role="log" aria-live="polite" className='messages'>
-            {this.state.messageElements}
+            <Proto messages={this.state.recentMessages} intersectCallback={this.trackIntercept.bind(this)} />
+            <Proto messages={this.props.messages} intersectCallback={this.trackIntercept.bind(this)}/>
           </div>
         </section>
 

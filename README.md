@@ -93,3 +93,9 @@ mix phx.new.ecto       # Creates a new Ecto project within an umbrella project
 ### Quirks
 
 - if an object belongs to another object, you can't use that other object's id directly, ie messages belongs_to User cant directly use user_id in the schema?
+
+### Credits to
+
+- https://github.com/zygisS22/intersectionObserverApi
+- https://non-traditional.dev/how-to-use-an-intersectionobserver-in-a-react-hook-9fb061ac6cb5
+- https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
