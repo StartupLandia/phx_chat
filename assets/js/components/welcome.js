@@ -89,9 +89,16 @@ export default class Welcome extends React.Component {
   }
 
   trackIntercept = (observableEntry) => {
+
+    const viewedOpts = {
+      messageId: observableEntry.target.dataset.messageId,
+      userId: this.state.currentUserId,
+      chatChannelId: this.state.channelId
+    }
+    const broadCastChannel = this.state.channel
     setTimeout(function () {
       if (observableEntry.intersectionRatio >= .5) {
-        console.log(observableEntry.target.dataset) 
+        broadCastChannel.push("msg_viewed", viewedOpts)
       }
     }, 2000);
   }
@@ -112,7 +119,7 @@ export default class Welcome extends React.Component {
         <section>
           <div id="messages" role="log" aria-live="polite" className='messages'>
             <Proto messages={this.state.recentMessages} intersectCallback={this.trackIntercept.bind(this)} />
-            <Proto messages={this.props.messages} intersectCallback={this.trackIntercept.bind(this)}/>
+            <Proto currentUserId={this.state.currentUserId} chatChannelId={this.state.channelId} messages={this.props.messages} intersectCallback={this.trackIntercept.bind(this)}/>
           </div>
         </section>
 

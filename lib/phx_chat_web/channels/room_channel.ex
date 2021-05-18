@@ -17,4 +17,9 @@ defmodule PhxChatWeb.RoomChannel do
     broadcast!(socket, "new_msg", %{body: message.body, inserted_at: message.inserted_at, submitted_by: PhxChat.Repo.get(PhxChat.User,message.user_id).name })
     {:noreply, socket}
   end
+
+  def handle_in("msg_viewed", %{"messageId" => messageId, "userId" => userId, "chatChannelId" => chatChannelId}, socket) do
+    PhxChat.MessageViewEvent.record_first_occurence(messageId, userId, chatChannelId)
+    {:noreply, socket}
+  end
 end
