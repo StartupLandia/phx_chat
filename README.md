@@ -89,6 +89,10 @@ mix phx.new.ecto       # Creates a new Ecto project within an umbrella project
   - Source: https://github.com/phoenixframework/phoenix
   - https://devhints.io/phoenix-migrations
 
+## Unix useful stuff (since I started working on ubuntu)
+- sudo -u postgres psql
+- ALTER USER postgres PASSWORD 'newpassword';
+
 
 ### Quirks
 
