@@ -4,17 +4,4 @@
 
 <%= react_component("Components.Welcome", %{users: @users, messages: @messages}) %>
 
-<section class="row">
-  <article class="column">
-    
-    <%# <select id="userId"> %>
-    <%#   <%= Enum.map @users, fn(user) -> %1> %>
-    <%#     <option value="<%= user.id %1>"><%= user.name %1></option> %>
-    <%#   <% end %1> %>
-    <%# </select> %>
-    <%# <input type="text" id="chat-input" label="chathere" /> %>
-    <%# <input type="submit" id="chatSubmit" label="submit" value="send it" /> %>
-  </article>
-</section>
-
 <a href="/">all channels</a>

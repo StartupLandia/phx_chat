@@ -5,7 +5,27 @@
 <section class="row">
   <article class="column">
     <%= Enum.map @channels, fn(item) -> %>
-      <a href="/chat_channels/<%= item.id %>"><%= item.name %></a></br>
+      <a href="" class='channel-link' data-base="/chat_channels/<%= item.id %>"><%= item.name %></a></br>
     <% end %>
   </article>
 </section>
+<br/>
+<h3>browse chats as</h3>
+<select id="userId" onchange="selectUser()">
+  <%= Enum.map @users, fn(user) -> %>
+    <option value="<%= user.id %>"><%= user.name %></option>
+  <% end %>
+</select>
+
+ <script>
+   selectUser = () => {
+    userId = document.getElementById("userId").value
+    channelLinks = document.getElementsByClassName('channel-link')
+    Array.prototype.forEach.call(channelLinks, (ele) => {
+      ele.href = ele.dataset.base + "?currentUserId=" + userId
+    })
+   }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    selectUser()
+  });
+  </script>

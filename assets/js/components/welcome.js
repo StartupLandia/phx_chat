@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import {Socket} from "phoenix"
 import MessageElement from "./message_element"
@@ -6,10 +6,19 @@ import MessageElement from "./message_element"
 import useIntersect from "./useIntersect";
 
 const TrackedViewable = (props) => {
-  const [ref, entry] = useIntersect({
-    threshold: [.5],
-    intersectCall: props.intersectCallback
-  });
+  let ref = useRef(null)
+  let entry  = {}
+
+  if (props.message.id == props.messageStartId) {
+    useEffect(() => {
+      ref.current.scrollIntoView()
+    }, [])
+  } else { 
+     [ref, entry] = useIntersect({
+      threshold: [.5],
+      intersectCall: props.intersectCallback
+    });
+  }
 
   return (
     <div ref={ref} ratio={entry.intersectionRatio} data-message-id={props.message.id}  >
@@ -22,7 +31,7 @@ const Proto = (props) => {
   return (
     <div >
       {props.messages.map((message, i) => (
-        <TrackedViewable message={message} initial={i % 2} key={i} intersectCallback={props.intersectCallback} />
+        <TrackedViewable  message={message} initial={i % 2} key={i} intersectCallback={props.intersectCallback} messageStartId={props.messageStartId} />
       ))}
     </div>
   );
@@ -38,6 +47,7 @@ export default class Welcome extends React.Component {
     socket.connect()
     let channelId = window.location.pathname.split("").pop()
     let channelName = "room:" + channelId 
+    console.log(props.users)
 
     this.state = { 
       chatSocket: socket,
@@ -45,8 +55,10 @@ export default class Welcome extends React.Component {
       channelName: channelName,
       channel: socket.channel(channelName, {}),
       chatMessage: '',
-      currentUserId: searchQuery.get('view_as_user_id') || 1,
+      currentUserId: searchQuery.get('currentUserId') || 1,
       recentMessages: [],
+      messageStartId: 500,
+      scrollToRef: null
     }
 
     this.state.channel.on("new_msg", payload => {
@@ -70,6 +82,7 @@ export default class Welcome extends React.Component {
 
     this.state.channel.push("new_msg", msgObj)
   }
+
 
   updateMessage = (e) => {
     this.setState({chatMessage: e.target.value})
@@ -112,21 +125,27 @@ export default class Welcome extends React.Component {
         </div>
       )
     })
+
+    const currentUserEle = this.props.users.filter((usr) => usr[1] == this.state.currentUserId)[0]
+
     return (
       <div>
-        <h3>current user id: {this.state.currentUserId} </h3>
-
         <section>
           <div id="messages" role="log" aria-live="polite" className='messages'>
             <Proto messages={this.state.recentMessages} intersectCallback={this.trackIntercept.bind(this)} />
-            <Proto currentUserId={this.state.currentUserId} chatChannelId={this.state.channelId} messages={this.props.messages} intersectCallback={this.trackIntercept.bind(this)}/>
+            <Proto
+              currentUserId={this.state.currentUserId}
+              chatChannelId={this.state.channelId}
+              messages={this.props.messages}
+              intersectCallback={this.trackIntercept.bind(this)}
+              messageStartId={this.state.messageStartId}
+            />
           </div>
         </section>
 
         <label> Send Message As</label>
-        <select id="currentUserId" onChange={this.updateUser} value={this.state.currentUserId}>
-          {usersAsOpts}
-        </select>
+
+        <h3>{currentUserEle[0]} User id: {this.state.currentUserId} </h3>
         <input type="text" label="chathere" value={this.state.chatMessage} onChange={this.updateMessage} />
         <input type="submit"  label="submit" value="Send!" onClick={this.sendChat} />
       </div>
