@@ -1,6 +1,7 @@
 defmodule PhxChat.MessageViewEvent do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
   alias PhxChat.MessageViewEvent
 
   schema "message_view_events" do
@@ -26,5 +27,10 @@ defmodule PhxChat.MessageViewEvent do
     else
       IO.puts('record exists, no further action your honor')
     end
+  end
+
+  def last_viewed_message_id(user_id, chat_channel_id) do
+    query = from e in "message_view_events", where: e.user_id == ^user_id, where: e.chat_channel_id == ^chat_channel_id, select: max(e.id)
+    Enum.at(PhxChat.Repo.all(query), 0)
   end
 end
