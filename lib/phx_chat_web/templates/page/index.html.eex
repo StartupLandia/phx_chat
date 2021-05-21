@@ -28,4 +28,5 @@
   window.addEventListener('DOMContentLoaded', (event) => {
     selectUser()
   });
-  </script>
+
+</script>

@@ -2,6 +2,6 @@
   Channel #<%= @channel.id %> '<%= @channel.name %>' 
 </section>
 
-<%= react_component("Components.Welcome", %{users: @users, messages: @messages}) %>
+<%= react_component("Components.Welcome", %{users: @users, messages: @messages, lastViewedMessageId: @last_viewed_message_id}) %>
 
 <a href="/">all channels</a>

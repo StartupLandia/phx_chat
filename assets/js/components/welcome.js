@@ -9,7 +9,9 @@ const TrackedViewable = (props) => {
   let ref = useRef(null)
   let entry  = {}
 
+  // console.log(props.message.id)
   if (props.message.id == props.messageStartId) {
+    console.log('trig', props.message.id, props.messageStartId, props.message)
     useEffect(() => {
       ref.current.scrollIntoView()
     }, [])
@@ -47,8 +49,10 @@ export default class Welcome extends React.Component {
     socket.connect()
     let channelId = window.location.pathname.split("").pop()
     let channelName = "room:" + channelId 
-    console.log(props.users)
 
+    const messageStartId = props.lastViewedMessageId || props.messages[props.messages.length -1].id
+
+    console.log('lastviewedid', messageStartId)
     this.state = { 
       chatSocket: socket,
       channelId: channelId,
@@ -57,7 +61,7 @@ export default class Welcome extends React.Component {
       chatMessage: '',
       currentUserId: searchQuery.get('currentUserId') || 1,
       recentMessages: [],
-      messageStartId: 500,
+      messageStartId: messageStartId,
       scrollToRef: null
     }
 
@@ -111,7 +115,7 @@ export default class Welcome extends React.Component {
     const broadCastChannel = this.state.channel
     setTimeout(function () {
       if (observableEntry.intersectionRatio >= .5) {
-        broadCastChannel.push("msg_viewed", viewedOpts)
+        // broadCastChannel.push("msg_viewed", viewedOpts)
       }
     }, 2000);
   }
@@ -131,6 +135,7 @@ export default class Welcome extends React.Component {
     return (
       <div>
         <section>
+          <span>last viewed message id: { this.state.messageStartId }</span>
           <div id="messages" role="log" aria-live="polite" className='messages'>
             <Proto messages={this.state.recentMessages} intersectCallback={this.trackIntercept.bind(this)} />
             <Proto

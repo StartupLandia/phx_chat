@@ -25,12 +25,12 @@ defmodule PhxChat.MessageViewEvent do
       changeset = PhxChat.MessageViewEvent.changeset(%PhxChat.MessageViewEvent{}, opts)
       PhxChat.Repo.insert(changeset)
     else
-      IO.puts('record exists, no further action your honor')
+      # IO.puts('record exists, no further action your honor')
     end
   end
 
   def last_viewed_message_id(user_id, chat_channel_id) do
-    query = from e in "message_view_events", where: e.user_id == ^user_id, where: e.chat_channel_id == ^chat_channel_id, select: max(e.id)
+    query = from e in "message_view_events", where: e.user_id == ^user_id, where: e.chat_channel_id == ^chat_channel_id, select: max(e.message_id)
     Enum.at(PhxChat.Repo.all(query), 0)
   end
 end
