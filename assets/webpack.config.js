@@ -19,6 +19,13 @@ module.exports = (env, options) => {
     entry: {
       'app': glob.sync('./vendor/**/*.js').concat(['./js/app.js'])
     },
+
+    resolve: {
+      alias: {
+        react: path.resolve(__dirname, './node_modules/react'),
+        'react-dom': path.resolve(__dirname, './node_modules/react-dom')
+      }
+    },
     output: {
       filename: '[name].js',
       path: path.resolve(__dirname, '../priv/static/js'),
