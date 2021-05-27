@@ -115,7 +115,7 @@ export default class Welcome extends React.Component {
     const broadCastChannel = this.state.channel
     setTimeout(function () {
       if (observableEntry.intersectionRatio >= .5) {
-        // broadCastChannel.push("msg_viewed", viewedOpts)
+        broadCastChannel.push("msg_viewed", viewedOpts)
       }
     }, 2000);
   }
