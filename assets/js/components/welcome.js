@@ -66,7 +66,7 @@ export default class Welcome extends React.Component {
     }
 
     this.state.channel.on("new_msg", payload => {
-      messages = this.state.recentMessages
+      let messages = this.state.recentMessages
       messages.push(payload)
       this.setState({recentMessages: messages})
     })
